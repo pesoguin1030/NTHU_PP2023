@@ -1,0 +1,53 @@
+[pp23s88@hades01 final_project]$ srun -p prof -N1 -n1 --gres=gpu:1 nvprof -m inst_integer,shared_load_throughput,shared_store_throughput,gld_throughput,gst_throughput ./final_unroll8_withSpace 2-image_downsample50.png test_unroll8_withSpace.png
+srun: job 885514 queued and waiting for resources
+srun: job 885514 has been allocated resources
+==18134== NVPROF is profiling process 18134, command: ./final_unroll8_withSpace 2-image_downsample50.png test_unroll8_withSpace.png
+==18134== Some kernel(s) will be replayed on device 0 in order to collect all events/metrics.
+Time: 23.79
+==18134== Profiling application: ./final_unroll8_withSpace 2-image_downsample50.png test_unroll8_withSpace.png
+==18134== Profiling result:
+==18134== Metric result:
+Invocations                               Metric Name                        Metric Description         Min         Max         Avg
+Device "NVIDIA GeForce GTX 1080 (0)"
+    Kernel: meanshift(unsigned char*, unsigned char*, int, int, int)
+          1                              inst_integer                      Integer Instructions  1.3589e+11  1.3589e+11  1.3589e+11
+          1                    shared_load_throughput             Shared Memory Load Throughput  999.40GB/s  999.40GB/s  999.40GB/s
+          1                   shared_store_throughput            Shared Memory Store Throughput  12.769GB/s  12.769GB/s  12.769GB/s
+          1                            gld_throughput                    Global Load Throughput  10.184GB/s  10.184GB/s  10.184GB/s
+          1                            gst_throughput                   Global Store Throughput  16.889MB/s  16.889MB/s  16.889MB/s
+[pp23s88@hades01 final_project]$ srun -p prof -N1 -n1 --gres=gpu:1 nvprof -m inst_integer,shared_load_throughput,shared_store_throughput,gld_throughput,gst_throughput ./final_unroll16_withSpace 2-image_downsample50.png t
+est_unroll16_withSpace.png
+srun: job 885516 queued and waiting for resources
+srun: job 885516 has been allocated resources
+==18186== NVPROF is profiling process 18186, command: ./final_unroll16_withSpace 2-image_downsample50.png test_unroll16_withSpace.png
+==18186== Some kernel(s) will be replayed on device 0 in order to collect all events/metrics.
+Time: 17.36
+==18186== Profiling application: ./final_unroll16_withSpace 2-image_downsample50.png test_unroll16_withSpace.png
+==18186== Profiling result:
+==18186== Metric result:
+Invocations                               Metric Name                        Metric Description         Min         Max         Avg
+Device "NVIDIA GeForce GTX 1080 (0)"
+    Kernel: meanshift(unsigned char*, unsigned char*, int, int, int)
+          1                              inst_integer                      Integer Instructions  1.4029e+11  1.4029e+11  1.4029e+11
+          1                    shared_load_throughput             Shared Memory Load Throughput  1019.9GB/s  1019.9GB/s  1019.9GB/s
+          1                   shared_store_throughput            Shared Memory Store Throughput  12.302GB/s  12.302GB/s  12.302GB/s
+          1                            gld_throughput                    Global Load Throughput  13.808GB/s  13.808GB/s  13.808GB/s
+          1                            gst_throughput                   Global Store Throughput  15.595MB/s  15.595MB/s  15.595MB/s
+[pp23s88@hades01 final_project]$ srun -p prof -N1 -n1 --gres=gpu:1 nvprof -m inst_integer,shared_load_throughput,shared_store_throughput,gld_throughput,gst_throughput ./final_unroll32_withSpace 2-image_downsample50.png t
+est_unroll32_withSpace.png
+srun: job 885518 queued and waiting for resources
+srun: job 885518 has been allocated resources
+==18236== NVPROF is profiling process 18236, command: ./final_unroll32_withSpace 2-image_downsample50.png test_unroll32_withSpace.png
+==18236== Some kernel(s) will be replayed on device 0 in order to collect all events/metrics.
+Time: 16.41
+==18236== Profiling application: ./final_unroll32_withSpace 2-image_downsample50.png test_unroll32_withSpace.png
+==18236== Profiling result:
+==18236== Metric result:
+Invocations                               Metric Name                        Metric Description         Min         Max         Avg
+Device "NVIDIA GeForce GTX 1080 (0)"
+    Kernel: meanshift(unsigned char*, unsigned char*, int, int, int)
+          1                              inst_integer                      Integer Instructions  1.3164e+11  1.3164e+11  1.3164e+11
+          1                    shared_load_throughput             Shared Memory Load Throughput  1882.4GB/s  1882.4GB/s  1882.4GB/s
+          1                   shared_store_throughput            Shared Memory Store Throughput  23.411GB/s  23.411GB/s  23.411GB/s
+          1                            gld_throughput                    Global Load Throughput  10.827GB/s  10.827GB/s  10.827GB/s
+          1                            gst_throughput                   Global Store Throughput  9.1274MB/s  9.1274MB/s  9.1274MB/s

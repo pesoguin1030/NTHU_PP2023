@@ -1,0 +1,172 @@
+Device "NVIDIA GeForce GTX 1080 (0)"
+    Kernel: meanshift(unsigned char*, unsigned char*, int, int, int)
+          1                              inst_integer                      Integer Instructions  9.6625e+10  9.6625e+10  9.6625e+10
+          1                    shared_load_throughput             Shared Memory Load Throughput  1838.1GB/s  1838.1GB/s  1838.1GB/s
+          1                   shared_store_throughput            Shared Memory Store Throughput  21.795GB/s  21.795GB/s  21.795GB/s
+          1                            gld_throughput                    Global Load Throughput  10.080GB/s  10.080GB/s  10.080GB/s
+          1                            gst_throughput                   Global Store Throughput  8.4974MB/s  8.4974MB/s  8.4974MB/s
+[pp23s88@hades01 final_project]$ nvcc final_unroll.cu -o final_unroll_16
+/usr/bin/ld: /tmp/tmpxft_001f5bb0_00000000-11_final_unroll.o: in function `read_png(char const*, unsigned char**, unsigned int*, unsigned int*, unsigned int*)':
+tmpxft_001f5bb0_00000000-6_final_unroll.cudafe1.cpp:(.text+0xae): undefined reference to `png_sig_cmp'
+/usr/bin/ld: tmpxft_001f5bb0_00000000-6_final_unroll.cudafe1.cpp:(.text+0xdf): undefined reference to `png_create_read_struct'
+/usr/bin/ld: tmpxft_001f5bb0_00000000-6_final_unroll.cudafe1.cpp:(.text+0x102): undefined reference to `png_create_info_struct'
+/usr/bin/ld: tmpxft_001f5bb0_00000000-6_final_unroll.cudafe1.cpp:(.text+0x125): undefined reference to `png_destroy_read_struct'
+/usr/bin/ld: tmpxft_001f5bb0_00000000-6_final_unroll.cudafe1.cpp:(.text+0x142): undefined reference to `png_init_io'
+/usr/bin/ld: tmpxft_001f5bb0_00000000-6_final_unroll.cudafe1.cpp:(.text+0x153): undefined reference to `png_set_sig_bytes'
+/usr/bin/ld: tmpxft_001f5bb0_00000000-6_final_unroll.cudafe1.cpp:(.text+0x166): undefined reference to `png_read_info'
+/usr/bin/ld: tmpxft_001f5bb0_00000000-6_final_unroll.cudafe1.cpp:(.text+0x19c): undefined reference to `png_get_IHDR'
+/usr/bin/ld: tmpxft_001f5bb0_00000000-6_final_unroll.cudafe1.cpp:(.text+0x219): undefined reference to `png_read_update_info'
+/usr/bin/ld: tmpxft_001f5bb0_00000000-6_final_unroll.cudafe1.cpp:(.text+0x22c): undefined reference to `png_get_rowbytes'
+/usr/bin/ld: tmpxft_001f5bb0_00000000-6_final_unroll.cudafe1.cpp:(.text+0x242): undefined reference to `png_get_channels'
+/usr/bin/ld: tmpxft_001f5bb0_00000000-6_final_unroll.cudafe1.cpp:(.text+0x29e): undefined reference to `png_destroy_read_struct'
+/usr/bin/ld: tmpxft_001f5bb0_00000000-6_final_unroll.cudafe1.cpp:(.text+0x2f5): undefined reference to `png_read_image'
+/usr/bin/ld: tmpxft_001f5bb0_00000000-6_final_unroll.cudafe1.cpp:(.text+0x306): undefined reference to `png_read_end'
+/usr/bin/ld: /tmp/tmpxft_001f5bb0_00000000-11_final_unroll.o: in function `write_png(char const*, unsigned char*, unsigned int, unsigned int, unsigned int)':
+tmpxft_001f5bb0_00000000-6_final_unroll.cudafe1.cpp:(.text+0x3aa): undefined reference to `png_create_write_struct'
+/usr/bin/ld: tmpxft_001f5bb0_00000000-6_final_unroll.cudafe1.cpp:(.text+0x3ba): undefined reference to `png_create_info_struct'
+/usr/bin/ld: tmpxft_001f5bb0_00000000-6_final_unroll.cudafe1.cpp:(.text+0x3d1): undefined reference to `png_init_io'
+/usr/bin/ld: tmpxft_001f5bb0_00000000-6_final_unroll.cudafe1.cpp:(.text+0x403): undefined reference to `png_set_IHDR'
+/usr/bin/ld: tmpxft_001f5bb0_00000000-6_final_unroll.cudafe1.cpp:(.text+0x41d): undefined reference to `png_set_filter'
+/usr/bin/ld: tmpxft_001f5bb0_00000000-6_final_unroll.cudafe1.cpp:(.text+0x430): undefined reference to `png_write_info'
+/usr/bin/ld: tmpxft_001f5bb0_00000000-6_final_unroll.cudafe1.cpp:(.text+0x441): undefined reference to `png_set_compression_level'
+/usr/bin/ld: tmpxft_001f5bb0_00000000-6_final_unroll.cudafe1.cpp:(.text+0x506): undefined reference to `png_write_image'
+/usr/bin/ld: tmpxft_001f5bb0_00000000-6_final_unroll.cudafe1.cpp:(.text+0x517): undefined reference to `png_write_end'
+/usr/bin/ld: tmpxft_001f5bb0_00000000-6_final_unroll.cudafe1.cpp:(.text+0x52a): undefined reference to `png_destroy_write_struct'
+collect2: error: ld returned 1 exit status
+[pp23s88@hades01 final_project]$ nvcc final_unroll.cu -o final_unroll_16 -lpng
+[pp23s88@hades01 final_project]$ srun -p prof -N1 -n1 --gres=gpu:1 nvprof -m inst_integer,shared_load_throughput,shared_store_throughput,gld_throughput,gst_throughput ./final_unroll_16 2-image_downsample50.png test_unroll_32.png
+==585469== NVPROF is profiling process 585469, command: ./final_unroll_16 2-image_downsample50.png test_unroll_32.png
+==585469== Some kernel(s) will be replayed on device 0 in order to collect all events/metrics.
+Time: 14.37
+==585469== Profiling application: ./final_unroll_16 2-image_downsample50.png test_unroll_32.png
+==585469== Profiling result:
+==585469== Metric result:
+Invocations                               Metric Name                        Metric Description         Min         Max         Avg
+Device "NVIDIA GeForce GTX 1080 (0)"
+    Kernel: meanshift(unsigned char*, unsigned char*, int, int, int)
+          1                              inst_integer                      Integer Instructions  1.0473e+11  1.0473e+11  1.0473e+11
+          1                    shared_load_throughput             Shared Memory Load Throughput  989.81GB/s  989.81GB/s  989.81GB/s
+          1                   shared_store_throughput            Shared Memory Store Throughput  11.506GB/s  11.506GB/s  11.506GB/s
+          1                            gld_throughput                    Global Load Throughput  12.914GB/s  12.914GB/s  12.914GB/s
+          1                            gst_throughput                   Global Store Throughput  14.586MB/s  14.586MB/s  14.586MB/s
+[pp23s88@hades01 final_project]$ nvcc final_unroll.cu -o final_unroll_8 -lpng
+[pp23s88@hades01 final_project]$ srun -p prof -N1 -n1 --gres=gpu:1 nvprof -m inst_integer,shared_load_throughput,shared_store_throughput,gld_throughput,gst_throughput ./final_unroll_8 2-image_downsample50.png test_unroll_8.png
+==585506== NVPROF is profiling process 585506, command: ./final_unroll_8 2-image_downsample50.png test_unroll_8.png
+==585506== Some kernel(s) will be replayed on device 0 in order to collect all events/metrics.
+Time: 16.52
+==585506== Profiling application: ./final_unroll_8 2-image_downsample50.png test_unroll_8.png
+==585506== Profiling result:
+==585506== Metric result:
+Invocations                               Metric Name                        Metric Description         Min         Max         Avg
+Device "NVIDIA GeForce GTX 1080 (0)"
+    Kernel: meanshift(unsigned char*, unsigned char*, int, int, int)
+          1                              inst_integer                      Integer Instructions  9.9460e+10  9.9460e+10  9.9460e+10
+          1                    shared_load_throughput             Shared Memory Load Throughput  1059.4GB/s  1059.4GB/s  1059.4GB/s
+          1                   shared_store_throughput            Shared Memory Store Throughput  12.687GB/s  12.687GB/s  12.687GB/s
+          1                            gld_throughput                    Global Load Throughput  10.119GB/s  10.119GB/s  10.119GB/s
+          1                            gst_throughput                   Global Store Throughput  16.780MB/s  16.780MB/s  16.780MB/s
+[pp23s88@hades01 final_project]$ nvcc final_unroll.cu -o final_unroll_64 -lpng
+ptxas error   : Entry function '_Z9meanshiftPhS_iii' uses too much shared data (0x19e30 bytes, 0xc000 max)
+[pp23s88@hades01 final_project]$ nvcc final_unroll.cu -o final_unroll_32 -lpng
+[pp23s88@hades01 final_project]$ srun -p prof -N1 -n1 --gres=gpu:1 nvprof -m inst_integer,shared_load_throughput,shared_store_throughput,gld_throughput,gst_throughput ./final_unroll_32 2-image_downsample50.png test_unroll_32.png
+==585728== NVPROF is profiling process 585728, command: ./final_unroll_32 2-image_downsample50.png test_unroll_32.png
+==585728== Some kernel(s) will be replayed on device 0 in order to collect all events/metrics.
+Time: 14.18
+==585728== Profiling application: ./final_unroll_32 2-image_downsample50.png test_unroll_32.png
+==585728== Profiling result:
+==585728== Metric result:
+Invocations                               Metric Name                        Metric Description         Min         Max         Avg
+Device "NVIDIA GeForce GTX 1080 (0)"
+    Kernel: meanshift(unsigned char*, unsigned char*, int, int, int)
+          1                              inst_integer                      Integer Instructions  1.0959e+11  1.0959e+11  1.0959e+11
+          1                    shared_load_throughput             Shared Memory Load Throughput  1971.9GB/s  1971.9GB/s  1971.9GB/s
+          1                   shared_store_throughput            Shared Memory Store Throughput  23.757GB/s  23.757GB/s  23.757GB/s
+          1                            gld_throughput                    Global Load Throughput  10.345GB/s  10.345GB/s  10.345GB/s
+          1                            gst_throughput                   Global Store Throughput  8.6962MB/s  8.6962MB/s  8.6962MB/s
+[pp23s88@hades01 final_project]$ srun -p prof -N1 -n1 --gres=gpu:1 nvprof -m inst_integer,shared_load_throughput,shared_store_throughput,gld_throughput,gst_throughput ./final_unroll_8 2-image_downsample50.png test_unroll_8.png
+==592388== NVPROF is profiling process 592388, command: ./final_unroll_8 2-image_downsample50.png test_unroll_8.png
+==592388== Some kernel(s) will be replayed on device 0 in order to collect all events/metrics.
+Time: 16.45
+==592388== Profiling application: ./final_unroll_8 2-image_downsample50.png test_unroll_8.png
+==592388== Profiling result:
+==592388== Metric result:
+Invocations                               Metric Name                        Metric Description         Min         Max         Avg
+Device "NVIDIA GeForce GTX 1080 (0)"
+    Kernel: meanshift(unsigned char*, unsigned char*, int, int, int)
+          1                              inst_integer                      Integer Instructions  9.9460e+10  9.9460e+10  9.9460e+10
+          1                    shared_load_throughput             Shared Memory Load Throughput  978.64GB/s  978.64GB/s  978.64GB/s
+          1                   shared_store_throughput            Shared Memory Store Throughput  11.720GB/s  11.720GB/s  11.720GB/s
+          1                            gld_throughput                    Global Load Throughput  9.3470GB/s  9.3470GB/s  9.3470GB/s
+          1                            gst_throughput                   Global Store Throughput  15.501MB/s  15.501MB/s  15.501MB/s
+[pp23s88@hades01 final_project]$ srun -p prof -N1 -n1 --gres=gpu:1 nvprof -m inst_integer,shared_load_throughput,shared_store_throughput,gld_throughput,gst_throughput ./final_unroll_32 2-image_downsample50.png test_unroll_32.png
+==592470== NVPROF is profiling process 592470, command: ./final_unroll_32 2-image_downsample50.png test_unroll_32.png
+==592470== Some kernel(s) will be replayed on device 0 in order to collect all events/metrics.
+Time: 14.17
+==592470== Profiling application: ./final_unroll_32 2-image_downsample50.png test_unroll_32.png
+==592470== Profiling result:
+==592470== Metric result:
+Invocations                               Metric Name                        Metric Description         Min         Max         Avg
+Device "NVIDIA GeForce GTX 1080 (0)"
+    Kernel: meanshift(unsigned char*, unsigned char*, int, int, int)
+          1                              inst_integer                      Integer Instructions  1.0959e+11  1.0959e+11  1.0959e+11
+          1                    shared_load_throughput             Shared Memory Load Throughput  1828.4GB/s  1828.4GB/s  1828.4GB/s
+          1                   shared_store_throughput            Shared Memory Store Throughput  22.028GB/s  22.028GB/s  22.028GB/s
+          1                            gld_throughput                    Global Load Throughput  9.5917GB/s  9.5917GB/s  9.5917GB/s
+          1                            gst_throughput                   Global Store Throughput  8.0631MB/s  8.0631MB/s  8.0631MB/s
+[pp23s88@hades01 final_project]$ srun -p prof -N1 -n1 --gres=gpu:1 nvprof ./final_unroll_32 2-image_downsam
+ple50.png test_unroll_32.png
+==593632== NVPROF is profiling process 593632, command: ./final_unroll_32 2-image_downsample50.png test_unroll_32.png
+Time: 0.61
+==593632== Profiling application: ./final_unroll_32 2-image_downsample50.png test_unroll_32.png
+==593632== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   99.96%  260.59ms         1  260.59ms  260.59ms  260.59ms  meanshift(unsigned char*, unsigned char*, int, int, int)
+                    0.02%  60.641us         1  60.641us  60.641us  60.641us  [CUDA memcpy HtoD]
+                    0.02%  53.153us         1  53.153us  53.153us  53.153us  [CUDA memcpy DtoH]
+      API calls:   60.39%  261.06ms         2  130.53ms  81.902us  260.98ms  cudaMemcpy
+                   38.79%  167.67ms         1  167.67ms  167.67ms  167.67ms  cudaHostRegister
+                    0.74%  3.2047ms         1  3.2047ms  3.2047ms  3.2047ms  cudaLaunchKernel
+                    0.04%  159.40us       101  1.5780us     119ns  76.017us  cuDeviceGetAttribute
+                    0.02%  92.211us         2  46.105us  9.7440us  82.467us  cudaFree
+                    0.01%  64.472us         2  32.236us  2.9720us  61.500us  cudaMalloc
+                    0.00%  14.047us         1  14.047us  14.047us  14.047us  cuDeviceGetName
+                    0.00%  8.6330us         1  8.6330us  8.6330us  8.6330us  cuDeviceGetPCIBusId
+                    0.00%  1.1970us         3     399ns     169ns     831ns  cuDeviceGetCount
+                    0.00%     839ns         2     419ns     153ns     686ns  cuDeviceGet
+                    0.00%     536ns         1     536ns     536ns     536ns  cuModuleGetLoadingMode
+                    0.00%     459ns         1     459ns     459ns     459ns  cuDeviceTotalMem
+                    0.00%     253ns         1     253ns     253ns     253ns  cuDeviceGetUuid
+[pp23s88@hades01 final_project]$ srun -p prof -N1 -n1 --gres=gpu:1 nvprof -m achieved_occupancy,sm_efficiency,shared_load_throughput,shared_store_throughput,gld_throu
+ghput,gst_throughput ./final_unroll_32 2-image_downsample50.png test_unroll_32.png
+==593692== NVPROF is profiling process 593692, command: ./final_unroll_32 2-image_downsample50.png test_unroll_32.png
+==593692== Some kernel(s) will be replayed on device 0 in order to collect all events/metrics.
+Time: 1.45
+==593692== Profiling application: ./final_unroll_32 2-image_downsample50.png test_unroll_32.png
+==593692== Profiling result:
+==593692== Metric result:
+Invocations                               Metric Name                        Metric Description         Min         Max         Avg
+Device "NVIDIA GeForce GTX 1080 (0)"
+    Kernel: meanshift(unsigned char*, unsigned char*, int, int, int)
+          1                        achieved_occupancy                        Achieved Occupancy    0.436674    0.436674    0.436674
+          1                             sm_efficiency                   Multiprocessor Activity      96.22%      96.22%      96.22%
+          1                    shared_load_throughput             Shared Memory Load Throughput  1957.8GB/s  1957.8GB/s  1957.8GB/s
+          1                   shared_store_throughput            Shared Memory Store Throughput  23.587GB/s  23.587GB/s  23.587GB/s
+          1                            gld_throughput                    Global Load Throughput  10.271GB/s  10.271GB/s  10.271GB/s
+          1                            gst_throughput                   Global Store Throughput  8.6338MB/s  8.6338MB/s  8.6338MB/s
+[pp23s88@hades01 final_project]$ srun -p prof -N1 -n1 --gres=gpu:1 nvprof -m achieved_occupancy,sm_efficiency,shared_load_throughput,shared_store_throughput,gld_throughput,gst_throughput ./final_unroll_32 2-image_downsample50.png /dev/null
+==593723== NVPROF is profiling process 593723, command: ./final_unroll_32 2-image_downsample50.png /dev/null
+==593723== Some kernel(s) will be replayed on device 0 in order to collect all events/metrics.
+Time: 2.09
+==593723== Profiling application: ./final_unroll_32 2-image_downsample50.png /dev/null
+==593723== Profiling result:
+==593723== Metric result:
+Invocations                               Metric Name                        Metric Description         Min         Max         Avg
+Device "NVIDIA GeForce GTX 1080 (0)"
+    Kernel: meanshift(unsigned char*, unsigned char*, int, int, int)
+          1                        achieved_occupancy                        Achieved Occupancy    0.436584    0.436584    0.436584
+          1                             sm_efficiency                   Multiprocessor Activity      96.22%      96.22%      96.22%
+          1                    shared_load_throughput             Shared Memory Load Throughput  1957.1GB/s  1957.1GB/s  1957.1GB/s
+          1                   shared_store_throughput            Shared Memory Store Throughput  23.579GB/s  23.579GB/s  23.579GB/s
+          1                            gld_throughput                    Global Load Throughput  10.267GB/s  10.267GB/s  10.267GB/s
+          1                            gst_throughput                   Global Store Throughput  8.6309MB/s  8.6309MB/s  8.6309MB/s
+[pp23s88@hades01 final_project]$ 

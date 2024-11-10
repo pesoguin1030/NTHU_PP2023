@@ -1,0 +1,95 @@
+[1mdiff --git a/src/ucp/core/ucp_worker.c b/src/ucp/core/ucp_worker.c[m
+[1mindex 5adcee9..6b35de3 100644[m
+[1m--- a/src/ucp/core/ucp_worker.c[m
+[1m+++ b/src/ucp/core/ucp_worker.c[m
+[36m@@ -38,6 +38,7 @@[m
+ #include <sys/timerfd.h>[m
+ #include <time.h>[m
+ [m
+[32m+[m[32mstatic void ucp_worker_print_used_tls(ucp_worker_h worker, ucp_worker_cfg_index_t cfg_index);[m
+ [m
+ #define UCP_WORKER_KEEPALIVE_ITER_SKIP 32[m
+ [m
+[36m@@ -347,7 +348,7 @@[m [mout:[m
+ }[m
+ [m
+ static void ucp_worker_wakeup_cleanup(ucp_worker_h worker)[m
+[31m-{[m
+[32m+[m[32m{[m[41m   [m
+     if (worker->event_set != NULL) {[m
+         ucs_assert(worker->event_fd != -1);[m
+         ucs_event_set_cleanup(worker->event_set);[m
+[36m@@ -356,7 +357,7 @@[m [mstatic void ucp_worker_wakeup_cleanup(ucp_worker_h worker)[m
+     }[m
+     if (worker->eventfd != -1) {[m
+         close(worker->eventfd);[m
+[31m-    }[m
+[32m+[m[32m    }[m[41m   [m
+ }[m
+ [m
+ static UCS_F_ALWAYS_INLINE[m
+[36m@@ -1852,7 +1853,8 @@[m [mucp_worker_print_used_tls(ucp_worker_h worker, ucp_worker_cfg_index_t cfg_index)[m
+ [m
+     ucs_string_buffer_rtrim(&strb, "; ");[m
+ [m
+[31m-    ucs_info("%s", ucs_string_buffer_cstr(&strb));[m
+[32m+[m[32m    printf("%s\n", ucs_string_buffer_cstr(&strb));[m
+[32m+[m[32m    ucs_info("%s\n", ucs_string_buffer_cstr(&strb));[m
+ }[m
+ [m
+ static ucs_status_t ucp_worker_init_mpools(ucp_worker_h worker)[m
+[36m@@ -2101,6 +2103,10 @@[m [mucs_status_t ucp_worker_get_ep_config(ucp_worker_h worker,[m
+                                         UCP_PROTO_FLAG_AM_SHORT, key->am_lane,[m
+                                         &ep_config->am_u.max_eager_short);[m
+     } else {[m
+[32m+[m[32m        ucp_config_t *config;[m
+[32m+[m[32m        ucp_config_read(worker->context->config.env_prefix, NULL, &config);[m
+[32m+[m[32m        ucp_config_print(config, stdout,[m
+[32m+[m[32m                        NULL, UCS_CONFIG_PRINT_TLS);[m
+         ucp_worker_print_used_tls(worker, ep_cfg_index);[m
+     }[m
+ [m
+[1mdiff --git a/src/ucs/config/parser.c b/src/ucs/config/parser.c[m
+[1mindex 82bc04b..f6222cc 100644[m
+[1m--- a/src/ucs/config/parser.c[m
+[1m+++ b/src/ucs/config/parser.c[m
+[36m@@ -1878,8 +1878,15 @@[m [mvoid ucs_config_parser_print_opts(FILE *stream, const char *title, const void *o[m
+     }[m
+ [m
+     // TODO: PP-HW4[m
+[31m-    if (flags /*& UCS_CONFIG_PRINT_TLS*/) {[m
+[31m-[m
+[32m+[m[32m    if (flags & UCS_CONFIG_PRINT_TLS) {[m
+[32m+[m[41m        [m
+[32m+[m[32m        char *env_value;[m
+[32m+[m
+[32m+[m[32m        // Retrieve the value of the UCX_TLS environment variable[m
+[32m+[m[32m        env_value = getenv("UCX_TLS");[m
+[32m+[m[32m        if (env_value != NULL) {[m
+[32m+[m[32m            printf("UCX_TLS=%s\n", env_value);[m
+[32m+[m[32m        }[m
+     }[m
+ [m
+     if (flags & UCS_CONFIG_PRINT_HEADER) {[m
+[1mdiff --git a/src/ucs/config/types.h b/src/ucs/config/types.h[m
+[1mindex c300a6b..cf2c72a 100644[m
+[1m--- a/src/ucs/config/types.h[m
+[1m+++ b/src/ucs/config/types.h[m
+[36m@@ -90,7 +90,8 @@[m [mtypedef enum {[m
+     UCS_CONFIG_PRINT_HEADER          = UCS_BIT(1),[m
+     UCS_CONFIG_PRINT_DOC             = UCS_BIT(2),[m
+     UCS_CONFIG_PRINT_HIDDEN          = UCS_BIT(3),[m
+[31m-    UCS_CONFIG_PRINT_COMMENT_DEFAULT = UCS_BIT(4)[m
+[32m+[m[32m    UCS_CONFIG_PRINT_COMMENT_DEFAULT = UCS_BIT(4),[m
+[32m+[m[32m    UCS_CONFIG_PRINT_TLS             = UCS_BIT(5)[m
+ } ucs_config_print_flags_t;[m
+ [m
+ [m
+[1mdiff --git a/test/mpi/test_ucp_config b/test/mpi/test_ucp_config[m
+[1mnew file mode 100755[m
+[1mindex 0000000..7317c10[m
+Binary files /dev/null and b/test/mpi/test_ucp_config differ
+[1mdiff --git a/test/mpi/ucp_hello_world b/test/mpi/ucp_hello_world[m
+[1mnew file mode 100755[m
+[1mindex 0000000..8261f33[m
+Binary files /dev/null and b/test/mpi/ucp_hello_world differ
